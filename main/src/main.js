@@ -1,8 +1,7 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
+import installElementPlus from './plugins/element'
 
-Vue.config.productionTip = false
-
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+const app = createApp(App)
+installElementPlus(app)
+app.mount('#app')

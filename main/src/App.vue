@@ -1,28 +1,124 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="body">
+    <div v-if="serverRunning">
+      <el-space size="large" direction="vertical">
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <el-row class="row-bg" justify="space-between">
+                <el-col :span="6">正在分享</el-col>
+                <el-col :span="6">
+                  <el-button
+                    class="danger"
+                    size="small"
+                    plain
+                    @click="stopServer"
+                  >取消分享</el-button>
+                </el-col>
+              </el-row>
+            </div>
+          </template>
+          <el-row class="row-bg" justify="space-between">
+            分享链接{{url}}
+            <el-button type="default" size="mini" icon="el-icon-document-copy"></el-button>
+          </el-row>
+        </el-card>
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <el-row class="row-bg" justify="space-between">
+                <el-col :span="6">分享列表</el-col>
+                <el-col :span="6">
+                  <el-upload
+                    action
+                    :show-file-list="false"
+                    multiple
+                    :http-request="addFiles"
+                  >
+                    <el-button size="small" plain>添加文件</el-button>
+                  </el-upload>
+                </el-col>
+              </el-row>
+            </div>
+          </template>
+          <div v-for="file in files" :key="file" class="text item file-item">
+            <el-row class="row-bg" justify="space-between">
+              <el-col :span="20">{{file.name}}</el-col>
+              <el-col :span="4">
+                <el-button
+                  type="default"
+                  icon="el-icon-delete"
+                  @click="()=>removeFile()"
+                ></el-button>
+              </el-col>
+            </el-row>
+          </div>
+          <el-alert
+            v-if="files.length===0"
+            title="无"
+            :closable="false"
+            type="info"
+            center
+          ></el-alert>
+        </el-card>
+      </el-space>
+    </div>
+    <div v-else>
+      <el-button type="primary" size="small" @click="startServer">开始分享</el-button>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+window.api = {
+  startServer: () => {},
+  stopServer: () => {
+    return true
+  },
+  addFile: () => {},
+  removeFile: () => {},
+  listFiles: () => {}
+}
+let api = window.api
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      serverRunning: false,
+      url: 'http://172.16.11.57.3456',
+      qrcode:
+        'https://pic2.zhimg.com/36940066ff196785773634369b4290c8_r.jpg?source=1940ef5c',
+      files: []
+    }
+  },
+  methods: {
+    startServer: function () {
+      api.startServer()
+      this.serverRunning = true
+    },
+    stopServer: function () {
+      api.stopServer()
+      this.serverRunning = false
+    },
+    addFiles: function (params) {
+      console.log(params)
+    },
+    removeFile: function (file) {
+      let removeFiles = this.files.filter(f => f.name === file.name)
+      console.log(removeFiles)
+      this.files = this.files.filter(f => f.name !== file.name)
+      api.removeFile(removeFiles[0])
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.body {
+  max-width: 400px;
+  margin: 0px auto;
+}
+.box-card {
+  width: 400px;
 }
 </style>
