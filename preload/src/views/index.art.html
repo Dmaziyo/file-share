@@ -54,9 +54,38 @@
         word-break: break-all;
         overflow: hidden;
       }
+      .submit-form {
+        width: 500px;
+        margin: 0px auto;
+      }
+      @media screen and (max-width: 500px) {
+        .body {
+          background: lightblue;
+          font-size: 16px;
+          width: 100%;
+        }
+        .content {
+          flex-direction: column;
+          width: 75%;
+          row-gap: 20px;
+        }
+        .text-medium {
+          font-size: 20px;
+          font-weight: bold;
+        }
+        .submit-form {
+          width: 90%;
+        }
+      }
     </style>
   </head>
   <body class="body">
+    <div class="submit-form">
+      <form action="/addFile" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <button type="submit">提交</button>
+      </form>
+    </div>
     <div class="content">
       {{each files}}
       <div

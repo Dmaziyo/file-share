@@ -20,6 +20,7 @@ target/
 
 .cache
 node_modules
+file-share-holders
 
 ### NetBeans ###
 /nbproject/private/
